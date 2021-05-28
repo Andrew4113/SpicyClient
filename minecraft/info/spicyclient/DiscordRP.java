@@ -1,9 +1,9 @@
-package info.spicyclient;
+package info.skyclient;
 
-import info.spicyclient.chatCommands.Command;
-import info.spicyclient.modules.Module;
-import info.spicyclient.modules.render.Hud;
-import info.spicyclient.music.MusicManager;
+import info.skyclient.chatCommands.Command;
+import info.skyclient.modules.Module;
+import info.skyclient.modules.render.Hud;
+import info.skyclient.music.MusicManager;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
@@ -34,7 +34,7 @@ public class DiscordRP {
 				
 			}).build();
 			
-			DiscordRPC.discordInitialize("733832488199389246", handlers, true);
+			DiscordRPC.discordInitialize("847861611909611551", handlers, true);
 			
 			new Thread("Discord RPC Callback") {
 				
@@ -57,7 +57,7 @@ public class DiscordRP {
 	
 	public void shutdown() {
 		
-		if (SpicyClient.discordFailedToStart)
+		if (SkyClient.discordFailedToStart)
 			return;
 		
 		running = false;
@@ -67,38 +67,26 @@ public class DiscordRP {
 	
 	public void refresh() {
 		
-		if (SpicyClient.discordFailedToStart)
+		if (SkyClient.discordFailedToStart)
 			return;
 		
 		if (Minecraft.getMinecraft().currentScreen == null && !Minecraft.getMinecraft().isSingleplayer()) {
-			lastLine = "Hacking on " + Minecraft.getMinecraft().getCurrentServerData().serverIP;
+			lastLine = "Jogando No " + Minecraft.getMinecraft().getCurrentServerData().serverIP;
 		}
 		else if (Minecraft.getMinecraft().currentScreen == null && Minecraft.getMinecraft().isSingleplayer()) {
-			lastLine = "Hacking in singleplayer";
+			lastLine = "Jogando No Single Player";
 		}
-		
-		try {
-			if (MusicManager.getMusicManager().playingMusic) {
-				lastLine = "Listening to " + MusicManager.getMusicManager().songName;
-			}
-		} catch (Exception e) {
-			
-		}
-		
-		update(lastLine);
-		
-	}
 	
 	public void update(String secondline) {
 		
-		if (SpicyClient.discordFailedToStart)
+		if (SkyClient.discordFailedToStart)
 			return;
 		
 		lastLine = secondline;
 		
 		int toggled = 0;
 		
-		for (Module m : SpicyClient.modules) {
+		for (Module m : SkyClient.modules) {
 			
 			if (m.isEnabled() && !(m instanceof Hud) && !(m instanceof info.spicyclient.modules.player.DiscordRichPresence) && !(m instanceof info.spicyclient.modules.player.IrcChat)) {
 				toggled++;
@@ -107,14 +95,14 @@ public class DiscordRP {
 		}
 		
 		DiscordRichPresence.Builder b = new DiscordRichPresence.Builder(secondline);
-		b.setBigImage("spicyclientlogo512x512", "Hacking in minecraft with " + SpicyClient.config.clientName + SpicyClient.config.clientVersion);
+		b.setBigImage("skyclientimage67", "Hacking in minecraft with " + SkyClient.config.clientName + SkyClient.config.clientVersion);
 		
-		if ((SpicyClient.config.skin.isEnabled() && SpicyClient.config.skin.mode.is("puro")) || SpicyClient.config.furries.isEnabled() || SpicyClient.config.floofyFoxes.isEnabled() || (SpicyClient.config.hideName.isEnabled() && SpicyClient.config.hideName.mode.getMode().toLowerCase().contains("floof"))){
-			//b.setSmallImage("floofyfox1", "This person is probably a furry...");
-			b.setSmallImage("gabe_thumbs_up", "This person is probably a furry...");
+		if ((SkyClient.config.skin.isEnabled() && SkyClient.config.skin.mode.is("puro")) || SkyClient.config.furries.isEnabled() || SkyClient.config.floofyFoxes.isEnabled() || (SkyClient.config.hideName.isEnabled() && SkyClient.config.hideName.mode.getMode().toLowerCase().contains("Mine")) {
+			//b.setSmallImage("skyclientimage67", "In Game");
+			b.setSmallImage("gabe_thumbs_up", "In Game");
 		}
 		
-		b.setDetails(toggled + "/" + (SpicyClient.modules.size() - 3) + " Modules enabled");
+		b.setDetails(toggled + "/" + (SkyClient.modules.size() - 3) + " Modules enabled");
 		b.setStartTimestamps(created);
 		
 		DiscordRPC.discordUpdatePresence(b.build());
